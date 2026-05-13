@@ -11,12 +11,10 @@
 
 using namespace std;
 
-
-//ARQUIVO ÚNICO (GERADOR/SOLAR/BESS)
-
-const string TOKEN_INFLUX = "8MTJNqurHp2zK8Cv4hIk97ZFSsw615IJOJ9vnqzfbctnyRlR8qycIy2MVGYpy5AOBQQnujmkZoTkkQThKjawHLtYKfQ_g=="; 
-const string ORG_ID = "fa4e574489898160b0af"; 
-const string BUCKET_NAME = "Gerador"; 
+//Credencias DO InfluxDB
+const string TOKEN_INFLUX = "TOKEN"; 
+const string ORG_ID = "ID"; 
+const string BUCKET_NAME = "NOME"; 
 const string URL_API = "/api/v2/write?org=" + ORG_ID + "&bucket=" + BUCKET_NAME + "&precision=s";
 
 string limpar_path(const string& s) {
@@ -94,16 +92,16 @@ string LerUltimaLinha(string path) {
     CloseHandle(hFile);
     return resultado;
 }
-//COMUNICAÇÃO INFLUXDB
+//comunicação com InfluxDB
 void EnviarParaInflux(string payload) {
-    HINTERNET hSess = InternetOpenA("Britacal_Core", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+    HINTERNET hSess = InternetOpenA("NOME DA EMPRESA_Core", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
     HINTERNET hConn = InternetConnectA(hSess, "127.0.0.1", 8086, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 1);
     HINTERNET hReq = HttpOpenRequestA(hConn, "POST", URL_API.c_str(), NULL, NULL, NULL, 0, 1);
     string head = "Authorization: Token " + TOKEN_INFLUX + "\r\nContent-Type: text/plain\r\n";
     if (HttpSendRequestA(hReq, head.c_str(), (DWORD)head.length(), (LPVOID)payload.c_str(), (DWORD)payload.length())) {
         DWORD code = 0, len = sizeof(code);
         HttpQueryInfoA(hReq, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &code, &len, NULL);
-        if (code == 204) cout << "[OK] Dados Britacal Enviados!" << endl;
+        if (code == 204) cout << "[OK] Dados NOME DA EMPRESA Enviados!" << endl;
     }
     InternetCloseHandle(hReq); 
     InternetCloseHandle(hConn); 
@@ -111,9 +109,9 @@ void EnviarParaInflux(string payload) {
 }
 
 int main() {
-    cout << "*******************************************" << endl;
-    cout << "*   SUPERVISORIO BRITACAL -	CSV UNICO     *" << endl;
-    cout << "*******************************************" << endl;
+    cout << "************************************************" << endl;
+    cout << "                                                " << endl;
+    cout << "************************************************" << endl;
     
     string caminho;
     cout << "Arraste o arquivo CSV  e pressione Enter: ";
@@ -136,7 +134,7 @@ int main() {
             vector<string> colunas = split(linha, ',');
             if(colunas.size() > 1) {
                 stringstream ss;
-                ss << "deif_data,maquina=Microgrid_Britacal "; 
+                ss << "deif_data,maquina=Microgrid_NOMEDAEMPRESA "; 
                 
                 bool primeiro = true;
                 for(size_t i = 1; i < colunas.size(); i++) { 
